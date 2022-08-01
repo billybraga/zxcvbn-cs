@@ -45,7 +45,7 @@ namespace Zxcvbn
 
             var recentDecadeRegexes = Enumerable
                 .Range(200, 100)
-                .TakeWhile(x => x < DateTime.Now.Year / 10)
+                .TakeWhile(x => x <= DateTime.Now.Year / 10)
                 .Select(x => $"{x}\\d");
             
             var recentYearsMatcher = new RegexMatcher(
