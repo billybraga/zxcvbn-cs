@@ -56,5 +56,26 @@ namespace Zxcvbn.Tests.Core
             var warning = "Names and surnames by themselves are easy to guess";
             result.Feedback.Warning.Should().BeEquivalentTo(warning);
         }
+        
+        public static object[][] RecentYearsShallBeRecognisedAsSuchData()
+        {
+            return new object[][]
+            {
+                new object[] { 1950 },
+                new object[] { 1975 },
+                new object[] { 1999 },
+                new object[] { 2012 },
+                new object[] { 2021 },
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(RecentYearsShallBeRecognisedAsSuchData))]
+        public void RecentYearsShallBeRecognisedAsSuch(int year)
+        {
+            var result = Zxcvbn.Core.EvaluatePassword($"john{year}");
+            var warning = "Recent years are easy to guess";
+            result.Feedback.Warning.Should().BeEquivalentTo(warning);
+        }
     }
 }
