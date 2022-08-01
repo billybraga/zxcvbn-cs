@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Zxcvbn.Matcher;
 
 namespace Zxcvbn
@@ -41,11 +43,21 @@ namespace Zxcvbn
                 new ReverseDictionaryMatcher("us_tv_and_film", "us_tv_and_film.lst"),
             };
 
+            var recentDecadeRegexes = Enumerable
+                .Range(200, 100)
+                .TakeWhile(x => x < DateTime.Now.Year / 10)
+                .Select(x => $"{x}\\d");
+            
+            var recentYearsMatcher = new RegexMatcher(
+                "19\\d\\d|" + string.Join("|", recentDecadeRegexes),
+                "recent_year"
+            );
+            
             return new List<IMatcher>(dictionaryMatchers)
             {
                 new RepeatMatcher(),
                 new SequenceMatcher(),
-                new RegexMatcher("19\\d\\d|200\\d|201\\d", "recent_year"),
+                recentYearsMatcher,
                 new DateMatcher(),
                 new SpatialMatcher(),
                 new L33tMatcher(dictionaryMatchers),
